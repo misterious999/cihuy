@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeroixDark • Panel Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0f1a;
+            --surface: #121a2e;
+            --surface-2: #16213a;
+            --accent: #00f0ff;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #1e2a4a;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        body { margin:0; font-family:'Inter',system-ui,sans-serif; background:var(--bg); color:var(--text); }
+        .font-display { font-family:'Space Grotesk', 'Inter', sans-serif; font-weight:600; letter-spacing:-0.03em; }
+        
+        .navbar {
+            background: rgba(18,26,46,0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            position: sticky; top:0; z-index:50;
+        }
+        .nav-inner { max-width:1280px; margin:0 auto; padding:0 24px; height:68px; display:flex; align-items:center; justify-content:space-between; }
+        .brand { display:flex; align-items:center; gap:12px; text-decoration:none; }
+        .brand-logo { width:40px; height:40px; background:linear-gradient(135deg,#00f0ff,#6366f1); border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:20px; }
+        .brand-name { font-size:22px; font-weight:700; color:white; }
+        
+        .user-pill { display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--border); padding:6px 16px 6px 6px; border-radius:9999px; cursor:pointer; }
+        .user-avatar { width:32px; height:32px; border-radius:9999px; border:2px solid var(--accent); }
+        
+        .container { max-width:1280px; margin:0 auto; padding:32px 24px; }
+        
+        .welcome h1 { font-size:32px; margin:0 0 8px; }
+        .welcome p { color:var(--text-muted); margin:0; }
+        
+        .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin:32px 0; }
+        .stat-card {
+            background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:24px;
+            transition: transform .2s ease, border-color .2s ease;
+        }
+        .stat-card:hover { transform:translateY(-4px); border-color:var(--accent); }
+        .stat-value { font-size:36px; font-weight:700; line-height:1; }
+        .stat-label { color:var(--text-muted); font-size:14px; margin-top:6px; }
+        
+        .section-title { font-size:20px; font-weight:700; margin-bottom:20px; }
+        
+        .menu-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
+        .menu-card {
+            background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:24px;
+            text-decoration:none; color:inherit; transition:all .3s ease;
+        }
+        .menu-card:hover { transform:translateY(-6px); border-color:var(--accent); }
+        .menu-card h3 { margin:12px 0 8px; font-size:18px; }
+        .menu-card p { margin:0; color:var(--text-muted); font-size:14px; line-height:1.5; }
+        
+        @media (max-width:768px) {
+            .welcome h1 { font-size:26px; }
+            .stats { grid-template-columns:1fr 1fr; }
+            .menu-grid { grid-template-columns:1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+                <div class="brand-logo">Z</div>
+                <span class="brand-name font-display">ZeroixDark</span>
+            </a>
+            <div class="user-pill" onclick="logout()">
+                <img id="avatar" class="user-avatar" src="https://ui-avatars.com/api/?name=Admin&background=0b0f1a&color=00f0ff" alt="">
+                <div>
+                    <div id="userName" style="font-weight:600; font-size:14px;">Admin</div>
+                    <div id="userRole" style="font-size:11px; color:#94a3b8;">Pemilik</div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="welcome">
+            <h1 class="font-display">Selamat datang, <span id="welcomeName">Admin</span>.</h1>
+            <p>Kelola panel ZeroixDark dengan lebih cepat dan nyaman.</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="totalServers">—</div>
+                <div class="stat-label">Total Server</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="activeUsers">—</div>
+                <div class="stat-label">Pengguna Aktif</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="nearExpired">—</div>
+                <div class="stat-label">Mendekati Expired</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Manajemen</h2>
+        <div class="menu-grid">
+            <a href="manage_ptero_users.html" class="menu-card">
+                <h3>Kelola Pengguna</h3>
+                <p>Atur user Private, Public, dan Public V2 beserta server mereka.</p>
+            </a>
+            <a href="manage_ptero_servers.html" class="menu-card">
+                <h3>Kelola Server</h3>
+                <p>Lihat dan kelola semua server aktif di panel.</p>
+            </a>
+            <a href="manage_expired.html" class="menu-card">
+                <h3>Kelola Expired <span style="font-size:11px; background:rgba(16,185,129,.15); color:#10b981; padding:1px 8px; border-radius:999px;">Baru</span></h3>
+                <p>Tambah masa aktif pengguna dengan mudah (input hari).</p>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const username = localStorage.getItem('panel_username') || 'Admin';
+        document.getElementById('userName').innerText = username;
+        document.getElementById('welcomeName').innerText = username.split(' ')[0];
+        document.getElementById('userRole').innerText = (localStorage.getItem('role') || 'pemilik');
+
+        // Dummy data (bisa dihubungkan ke API nanti)
+        document.getElementById('totalServers').innerText = '142';
+        document.getElementById('activeUsers').innerText = '94';
+        document.getElementById('nearExpired').innerText = '17';
+
+        function logout() {
+            if(confirm('Keluar dari panel?')) {
+                localStorage.clear();
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+</html>

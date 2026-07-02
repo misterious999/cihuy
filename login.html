@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login • ZeroixDark</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap" rel="stylesheet">
+    <style>
+        body { margin:0; font-family:'Inter',system-ui,sans-serif; background:#0b0f1a; color:#f1f5f9; display:flex; align-items:center; justify-content:center; min-height:100vh; }
+        .login-box { width:100%; max-width:380px; padding:40px 32px; background:#121a2e; border:1px solid #1e2a4a; border-radius:24px; }
+        .brand { text-align:center; margin-bottom:32px; }
+        .brand-logo { width:56px; height:56px; background:linear-gradient(135deg,#00f0ff,#6366f1); border-radius:16px; margin:0 auto 12px; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:700; color:white; }
+        h1 { text-align:center; margin:0 0 8px; font-size:28px; }
+        .subtitle { text-align:center; color:#94a3b8; margin-bottom:32px; }
+        input { width:100%; padding:14px 16px; background:#0b0f1a; border:1px solid #1e2a4a; border-radius:14px; color:white; margin-bottom:16px; font-size:15px; }
+        button { width:100%; padding:14px; background:#00f0ff; color:#0b0f1a; border:none; border-radius:14px; font-weight:700; font-size:15px; cursor:pointer; }
+        button:hover { background:#00d4d4; }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <div class="brand">
+            <div class="brand-logo">Z</div>
+            <h1 class="font-display">ZeroixDark</h1>
+            <p class="subtitle">Panel Management</p>
+        </div>
+        
+        <input type="text" id="username" placeholder="Username" value="admin">
+        <input type="password" id="password" placeholder="Password" value="admin123">
+        
+        <button onclick="login()">Masuk ke Panel</button>
+        
+        <p style="text-align:center; font-size:12px; color:#64748b; margin-top:24px;">
+            Demo: admin / admin123
+        </p>
+    </div>
+
+    <script>
+        function login() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+
+            // Simple demo login (bisa diganti dengan Firebase nanti)
+            if (user === 'admin' && pass === 'admin123') {
+                localStorage.setItem('panel_username', user);
+                localStorage.setItem('role', 'pemilik');
+                window.location.href = 'index.html';
+            } else {
+                alert('Username atau password salah (demo: admin / admin123)');
+            }
+        }
+    </script>
+</body>
+</html>

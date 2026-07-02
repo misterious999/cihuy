@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Expired • ZeroixDark</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0f1a; --surface: #121a2e; --accent: #00f0ff;
+            --text: #f1f5f9; --text-muted: #94a3b8; --border: #1e2a4a;
+            --success: #10b981; --warning: #f59e0b; --danger: #ef4444;
+        }
+        body { margin:0; font-family:'Inter',system-ui,sans-serif; background:var(--bg); color:var(--text); }
+        .container { max-width:1200px; margin:0 auto; padding:24px; }
+        .card { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:24px; margin-bottom:24px; }
+        input, select, textarea { width:100%; padding:13px 15px; background:#0b0f1a; border:1px solid var(--border); border-radius:14px; color:white; margin-bottom:14px; font-size:15px; }
+        button { padding:13px 24px; background:var(--accent); color:#0b0f1a; border:none; border-radius:14px; font-weight:700; cursor:pointer; font-size:15px; }
+        table { width:100%; border-collapse:collapse; }
+        th, td { padding:16px; text-align:left; border-bottom:1px solid var(--border); }
+        th { color:var(--text-muted); font-size:12px; text-transform:uppercase; }
+        .status { padding:4px 14px; border-radius:999px; font-size:12px; font-weight:700; }
+        .status-active { background:rgba(16,185,129,.15); color:#10b981; }
+        .status-expired { background:rgba(239,68,68,.15); color:#ef4444; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="margin-bottom:8px;">Kelola Expired</h1>
+        <p style="color:#94a3b8;">Tambah masa aktif pengguna dengan cepat.</p>
+
+        <!-- Form Tambah Hari -->
+        <div class="card">
+            <h3 style="margin-top:0; margin-bottom:20px;">Tambah / Perpanjang Masa Aktif</h3>
+            
+            <div style="display:grid; grid-template-columns:1fr 160px; gap:16px; align-items:end;">
+                <div>
+                    <label style="display:block; margin-bottom:8px; font-weight:600;">Pilih User</label>
+                    <select id="expiredUser" style="margin-bottom:0;"></select>
+                </div>
+                <div>
+                    <label style="display:block; margin-bottom:8px; font-weight:600;">Tambah Hari</label>
+                    <input type="number" id="addDays" value="30" style="font-size:18px; font-weight:700; margin-bottom:0;">
+                </div>
+            </div>
+            
+            <div style="margin-top:16px;">
+                <label style="display:block; margin-bottom:8px; font-weight:600;">Catatan (Opsional)</label>
+                <textarea id="note" placeholder="Contoh: Perpanjangan paket 1 bulan" rows="2"></textarea>
+            </div>
+            
+            <button onclick="addExpiredDays()" style="margin-top:8px;">Simpan Perpanjangan</button>
+        </div>
+
+        <!-- Daftar User -->
+        <div class="card">
+            <h3 style="margin-top:0;">Daftar Pengguna</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Tanggal Expired</th>
+                        <th>Sisa Hari</th>
+                        <th>Status</th>
+                        <th style="width:140px;">Aksi Cepat</th>
+                    </tr>
+                </thead>
+                <tbody id="userTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let users = [
+            { uid: 'u1', username: 'nuk', expiredAt: Date.now() + (5 * 86400000) },
+            { uid: 'u2', username: 'reseller01', expiredAt: Date.now() + (12 * 86400000) },
+            { uid: 'u3', username: 'partner_v2', expiredAt: Date.now() - (2 * 86400000) },
+        ];
+
+        function getDaysLeft(expiredAt) {
+            return Math.ceil((expiredAt - Date.now()) / 86400000);
+        }
+
+        function renderUsers() {
+            const tbody = document.getElementById('userTable');
+            tbody.innerHTML = '';
+
+            users.forEach(user => {
+                const daysLeft = getDaysLeft(user.expiredAt);
+                const isActive = daysLeft > 0;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${user.username}</strong></td>
+                    <td>${new Date(user.expiredAt).toLocaleDateString('id-ID')}</td>
+                    <td>${daysLeft} hari</td>
+                    <td>
+                        <span class="status ${isActive ? 'status-active' : 'status-expired'}">
+                            ${isActive ? 'Aktif' : 'Expired'}
+                        </span>
+                    </td>
+                    <td>
+                        <button onclick="quickAddDays('${user.uid}', 30)" class="btn" style="padding:8px 14px; font-size:13px;">+30 Hari</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function addExpiredDays() {
+            const uid = document.getElementById('expiredUser').value;
+            const days = parseInt(document.getElementById('addDays').value);
+            const note = document.getElementById('note').value;
+
+            if (!uid || !days) {
+                alert('Pilih user dan isi jumlah hari!');
+                return;
+            }
+
+            const user = users.find(u => u.uid === uid);
+            if (!user) return;
+
+            // Tambah hari ke expiredAt yang sudah ada
+            user.expiredAt = user.expiredAt + (days * 86400000);
+
+            alert(`Berhasil menambah ${days} hari untuk ${user.username}`);
+            
+            // Reset form
+            document.getElementById('addDays').value = '30';
+            document.getElementById('note').value = '';
+
+            renderUsers();
+        }
+
+        function quickAddDays(uid, days) {
+            const user = users.find(u => u.uid === uid);
+            if (!user) return;
+
+            user.expiredAt = user.expiredAt + (days * 86400000);
+            alert(`Berhasil menambah ${days} hari untuk ${user.username}`);
+            renderUsers();
+        }
+
+        function initUserSelect() {
+            const select = document.getElementById('expiredUser');
+            select.innerHTML = '<option value="">-- Pilih User --</option>';
+            
+            users.forEach(user => {
+                const option = document.createElement('option');
+                option.value = user.uid;
+                option.textContent = user.username;
+                select.appendChild(option);
+            });
+        }
+
+        // Inisialisasi
+        function init() {
+            initUserSelect();
+            renderUsers();
+        }
+
+        init();
+    </script>
+</body>
+</html>
